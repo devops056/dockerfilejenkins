@@ -114,7 +114,7 @@ then
 		exit 0
 	else
 		echo "No PHP code found"
-	exit 1
+		exit 1
 	fi
 else
 	if sudo ls /home/code/ | grep index.html
