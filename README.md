@@ -41,9 +41,9 @@ docker ps
 ```
 if ls /home/ | grep code
 then
-echo "Directory already present"
+	echo "Directory already present"
 else
-sudo mkdir /home/code
+	sudo mkdir /home/code
 fi
 
 sudo rm -rf /home/code/*
@@ -51,28 +51,28 @@ sudo cp -rvf * /home/code/
 ```
 
 #### Step - 5 - Job-2 -this job run if job1 build successfully -it will check code, run respective container(PHP or HTML), please find the below code, refer these snaps - (Job-2-snap-1, Job-2-snap-2, Github php code, PHP code running, Github html code, HTML code running).
-   
+
 ```
 if sudo ls /home/code/ | grep .php
 then
 	if sudo docker ps | grep phpos
-    then
-    	echo "PHPOS is already running"
-    	sudo docker exec phpos rm -f /var/www/html/*.php
+	then
+		echo "PHPOS is already running"
+		sudo docker exec phpos rm -f /var/www/html/*.php
 		sudo docker cp /home/code/*.php phpos:/var/www/html/
-    else
-    	if sudo docker ps -a | grep phpos
-        then
-        	echo "PHPOS is stopped"
-    		sudo docker start phpos
-        	sudo docker exec phpos rm -f /var/www/html/*.php
-			sudo docker cp /home/code/*.php phpos:/var/www/html/
-    	else
-    		sudo docker run -dit --name phpos -p 80:80 vimal13/apache-webserver-php
+	else
+		if sudo docker ps -a | grep phpos
+		then
+			echo "PHPOS is stopped"
+			sudo docker start phpos
+			sudo docker exec phpos rm -f /var/www/html/*.php
+			sudo docker cp /home/code/*.php phpos:/var/www/html
+		else
+			sudo docker run -dit --name phpos -p 80:80 vimal13/apache-webserver-php
 			sudo docker exec phpos rm -f /var/www/html/*.php
 			sudo docker cp /home/code/*.php phpos:/var/www/html/
-        fi
-    fi
+		fi
+	fi
 else
 	echo "No PHP code available"
 fi
@@ -81,23 +81,23 @@ fi
 if sudo ls /home/code/ | grep .html
 then
 	if sudo docker ps | grep htmlos
-    then
-    	echo "HTMLOS is already running"
-        sudo docker exec htmlos rm -f /var/www/html/*.html
-        sudo docker cp /home/code/*.html htmlos:/var/www/html/
-    else 
+	then
+		echo "HTMLOS is already running"
+		sudo docker exec htmlos rm -f /var/www/html/*.html
+		sudo docker cp /home/code/*.html htmlos:/var/www/html/
+	else
 		if sudo docker ps -a | grep htmlos
-        then
-        	echo "HTMLOS is stopped"
-    		sudo docker start htmlos
+		then
+			echo "HTMLOS is stopped"
+			sudo docker start htmlos
 			sudo docker exec htmlos rm -f /var/www/html/*.html
 			sudo docker cp /home/code/*.html htmlos:/var/www/html/
-    	else
-    		sudo docker run -dit --name htmlos -p 8081:80 krushnakant241/mywebos:v1
+		else
+			sudo docker run -dit --name htmlos -p 8081:80 krushnakant241/mywebos:v1
 			sudo docker exec htmlos rm -f /var/www/html/*.html
 			sudo docker cp /home/code/*.html htmlos:/var/www/html/
-    	fi
-	fi        
+		fi
+	fi
 else
 	echo "No HTML code available"
 fi
@@ -108,26 +108,26 @@ fi
 ```
 if sudo ls /home/code/ | grep index.php
 then
-export status=$(curl -o /dev/null -s -w "%{http_code}" http://192.168.99.101/index.php)
+	export status=$(curl -o /dev/null -s -w "%{http_code}" http://192.168.99.101/index.php)
 	if [ $status -eq 200 ]
-	then 
-	exit 0
+	then
+		exit 0
 	else
-   	echo "No PHP code found"
-	exit 1	
+		echo "No PHP code found"
+	exit 1
 	fi
 else
 	if sudo ls /home/code/ | grep index.html
-    then
-    export status1=$(curl -o /dev/null -s -w "%{http_code}" http://192.168.99.101:8081/index.html)
-    	if [ $status1 -eq 200 ]
-		then 
-		exit 0
+	then
+		export status1=$(curl -o /dev/null -s -w "%{http_code}" http://192.168.99.101:8081/index.html)
+		if [ $status1 -eq 200 ]
+		then
+			exit 0
 		else
-		echo "No HTML code found"
-		exit 1
-		fi    
-    fi   
+			echo "No HTML code found"
+			exit 1
+		fi
+	fi
 echo "No suitable code found"
 exit 1
 fi
@@ -144,35 +144,34 @@ exit 1
 ```
 if  sudo docker ps | grep phpos
 then
-echo "PHPOS is already running"
-exit 0
+	echo "PHPOS is already running"
+	exit 0
 else
 	if sudo docker ps -a | grep phpos
-    then
-    echo "PHPOS is stopped"
-    sudo docker start phpos
-    else
-    sudo docker run -dit --name phpos -p 80:80 vimal13/apache-webserver-php
-	sudo docker exec phpos rm -f /var/www/html/index.php
-	sudo docker cp /home/code/*.php phpos:/var/www/html/
+	then
+		echo "PHPOS is stopped"
+		sudo docker start phpos
+	else
+		sudo docker run -dit --name phpos -p 80:80 vimal13/apache-webserver-php
+		sudo docker exec phpos rm -f /var/www/html/index.php
+		sudo docker cp /home/code/*.php phpos:/var/www/html/
 	fi
 fi
 ```
 ```
 if  sudo docker ps | grep htmlos
 then
-echo "HTMLOS is already running"
-exit 0
+	echo "HTMLOS is already running"
+	exit 0
 else
-	if
-    sudo docker ps -a | grep htmlos
-    then
-    echo "HTMLOS is stopped"
-    sudo docker start htmlos
-    else
-	sudo docker run -dit --name htmlos -p 8081:80 krushnakant241/mywebos:v1
-	sudo docker exec htmlos rm -f /var/www/html/index.html
-	sudo docker cp /home/code/*.html htmlos:/var/www/html/
+	if sudo docker ps -a | grep htmlos
+	then
+		echo "HTMLOS is stopped"
+		sudo docker start htmlos
+	else
+		sudo docker run -dit --name htmlos -p 8081:80 krushnakant241/mywebos:v1
+		sudo docker exec htmlos rm -f /var/www/html/index.html
+		sudo docker cp /home/code/*.html htmlos:/var/www/html/
 	fi
 fi
 ```
